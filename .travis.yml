@@ -9,7 +9,7 @@ before_install:
   - sudo apt-get -qq update
 # Install packages
 install:
-  - Rscript -e "install.packages('ggmap', repos='http://cran.r-project.org')"
+  - Rscript -e "install.packages(c('ggmap', 'methods', 'rmarkdown', 'knitr'), repos='http://cran.r-project.org')"
   - Rscript -e "library(methods); library(rmarkdown); library(knitr); rmarkdown::render('test.Rmd')"
 # Run test
 script:
