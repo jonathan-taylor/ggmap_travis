@@ -1,0 +1,16 @@
+---
+title: "Foo"
+author: "Bar"
+output: 
+     html_document:
+         keep_md: true
+---
+
+
+```{r echo=TRUE}
+Location = "San Francisco"
+library(ggmap)
+map = get_map(location=Location, source="google", maptype="roadmap", crop=F, zoom=10)
+ggmap(map)
+print(map)
+```
