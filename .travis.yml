@@ -1,0 +1,15 @@
+language: r
+cache: packages
+r: 
+  - release
+notifications:
+  email: false
+before_install:
+  - export TZ=US/Pacific
+  - sudo apt-get -qq update
+  - Rscript -e "install.packages('ggmap', repos='http://cran.r-project.org')"
+# Install packages
+# Run test
+script:
+  - make all
+
