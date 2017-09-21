@@ -12,4 +12,4 @@ before_install:
 # Run test
 script:
   - make all
-
+  - # test
