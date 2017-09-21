@@ -7,8 +7,9 @@ notifications:
 before_install:
   - export TZ=US/Pacific
   - sudo apt-get -qq update
-  - Rscript -e "install.packages('ggmap', repos='http://cran.r-project.org')"
 # Install packages
+install:
+  - Rscript -e "install.packages('ggmap', repos='http://cran.r-project.org')"
 # Run test
 script:
   - make all
