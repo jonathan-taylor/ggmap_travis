@@ -7,6 +7,7 @@ notifications:
 before_install:
   - export TZ=US/Pacific
   - sudo apt-get -qq update
+  - sudo apt-get install libgmp3-dev r-cran-ggmap
 # Install packages
 install:
   - Rscript -e "install.packages(c('ggmap', 'methods', 'rmarkdown', 'knitr'), repos='http://cran.r-project.org')"
