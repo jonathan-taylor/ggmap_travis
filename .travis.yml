@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get install libgmp3-dev r-cran-ggmap
 # Install packages
 install:
-  - Rscript -e "install.packages(c('ggmap', 'methods', 'rmarkdown', 'knitr'), repos='http://cran.r-project.org')"
+  - Rscript -e "install.packages(c('tidyverse', 'ggmap', 'methods', 'rmarkdown', 'knitr'), repos='http://cran.r-project.org')"
   - Rscript -e "library(methods); library(rmarkdown); library(knitr); rmarkdown::render('test.Rmd')"
 # Run test
 script:

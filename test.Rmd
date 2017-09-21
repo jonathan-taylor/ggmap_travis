@@ -7,10 +7,91 @@ output:
 ---
 
 
+```{r include=F}
+library(tidyverse)
+station <- read_csv(file='data/babs/201508_station_data.csv',
+                    col_types = cols(installation = col_datetime( format = "%m/%d/%Y")))
+trip <- read_csv(file='data/babs/201508_trip_data.csv', 
+                 col_types = cols(`Start Date` = col_datetime( format = "%m/%d/%Y %H:%S"),
+                                  `End Date` = col_datetime( format = "%m/%d/%Y %H:%S")))
+# eliminate spaces
+nm <- names(trip); nm.no.whitespace <- gsub(" ","",nm)
+names(trip) <- nm.no.whitespace
+```
+
 ```{r echo=TRUE}
 Location = "San Francisco"
 library(ggmap)
 map = get_map(location=Location, source="google", maptype="roadmap", crop=F, zoom=10)
 ggmap(map)
 print(map)
+```
+
+```{r include=F}
+N.trip.start <- trip %>% group_by(StartTerminal) %>% summarise(N.trips.start=n())
+```
+
+
+```{r include=F}
+N.trip.end <- trip %>% group_by(EndTerminal) %>% summarise(N.trips.end=n()) 
+```
+
+```{r include=F}
+trip.min <- trip %>% summarise(min.tm = min(StartDate))
+install.max <- station %>% summarise(max.tm = max(installation))
+trip.min
+install.max
+```
+
+```{r include=F}
+N.trip <- N.trip.start %>% inner_join(N.trip.end, by=c("StartTerminal"="EndTerminal"))
+N.trip <- N.trip %>% rename(station_id=StartTerminal)
+```
+
+```{r include=F}
+N.trip <- N.trip %>% mutate(NetFlux = N.trips.start-N.trips.end)
+```
+
+```{r include=F}
+summary(N.trip$NetFlux)
+```
+
+```{r include=F}
+N.trip <- N.trip %>% inner_join(station,by="station_id")
+```
+
+```{r include=F}
+Location <- c(lon=median(N.trip$long),lat=median(N.trip$lat))
+```
+
+```{r include=F}
+library(ggmap)
+map1 <- get_map(location=Location,source="google",maptype="roadmap",crop=F,zoom=10)
+```
+
+```{r include=F}
+ggmap(map1)
+```
+
+```
+ggmap(myMap) + geom_point(data=myData,aes(x=long,y=lat))
+```
+
+```{r include=F}
+ggmap(map1) + geom_point(data=N.trip,aes(x=long,y=lat,size=abs(NetFlux),col=factor(sign(NetFlux))),alpha=.6)
+```
+
+```{r include=F}
+N.trip.sf <- N.trip %>% filter(landmark=="San Francisco")
+```
+
+
+```{r include=F}
+Location.sf <- c(median(N.trip.sf$long),median(N.trip.sf$lat))
+map.sf <- get_map(Location.sf,source="google",maptype="roadmap",crop=F,zoom=14)
+ggmap(map.sf)
+```
+
+```{r include=F}
+ggmap(map.sf) + geom_point(data=N.trip.sf,aes(x=long,y=lat,size=abs(NetFlux),col=factor(sign(NetFlux))),alpha=.6)
 ```
